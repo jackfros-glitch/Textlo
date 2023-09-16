@@ -3,6 +3,32 @@
 @tailwind utilities;
 
 
+*{
+    box-sizing: border-box;
+}
+*::after{
+    box-sizing: border-box;
+}
+*::before{
+    box-sizing: border-box;
+}
+body{
+    margin: 8px;
+}
 .microphone-container{
-    @apply w-[80%] m-auto mt-[20px] rounded-sm border border-sky-500 pl-5 h-14 flex  justify-end pr-8;
+    @apply  rounded-sm   h-14 flex  justify-end pr-8 items-center;
+}
+.stopwatch-container{
+    @apply justify-self-center;
+}
+
+.container{
+    @apply grid grid-cols-2 w-[80%] rounded-sm border border-sky-500 m-auto items-center;
+}
+@media screen and (max-width:390px) {
+    .stopwatch-container{
+        
+    }
+    .microphone-container{
+    }
 }
