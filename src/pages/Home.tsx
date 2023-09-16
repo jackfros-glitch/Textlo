@@ -4,6 +4,7 @@ import { faMicrophone } from "@fortawesome/free-solid-svg-icons";
 import { faStop } from "@fortawesome/free-solid-svg-icons/faStop";
 import { faEllipsisVertical } from "@fortawesome/free-solid-svg-icons/faEllipsisVertical";
 import StopWatch from "../components/StopWatch";
+import TextContainer from "../components/TextContainer";
 
 const Home = () => {
   // state to store time
@@ -32,7 +33,7 @@ const Home = () => {
   };
   return (
     <>
-      <div>
+      <div className="h-full">
         <div className="container">
           <StopWatch time={time} />
           <div className="microphone-container">
@@ -58,7 +59,7 @@ const Home = () => {
             </button>
             <button
               id="stopButton"
-              className="mx-2 border border-blue-200 p-2 py-0 flex h-8 mr-3 items-center"
+              className="mx-2 border border-blue-200 p-2 py-0 flex h-8 mr-3 items-center rounded-sm"
               onClick={reset}
             >
               <FontAwesomeIcon icon={faStop} style={{ color: "red" }} />
@@ -71,6 +72,8 @@ const Home = () => {
             </button>
           </div>
         </div>
+        {/* Text Area */}
+        <TextContainer />
       </div>
     </>
   );
