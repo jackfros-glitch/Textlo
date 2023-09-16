@@ -3,3 +3,6 @@
 @tailwind utilities;
 
 
+.microphone-container{
+    @apply w-[80%] m-auto mt-[20px] rounded-sm border border-sky-500 pl-5 h-14 flex  justify-end pr-8;
+}
