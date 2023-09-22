@@ -14,11 +14,15 @@ const StopWatch = ({ time }: Props) => {
   // Seconds calculation
   const seconds = Math.floor((time % 6000) / 100);
 
+  // Milliseconds calculation
+  const milliseconds = time % 100;
+
   return (
     <div className="stopwatch-container">
       <p className="stopwatch-time">
         {hours}:{minutes.toString().padStart(2, "0")}:
-        {seconds.toString().padStart(2, "0")}
+        {seconds.toString().padStart(2, "0")}:
+        {milliseconds.toString().padStart(2, "0")}
       </p>
     </div>
   );

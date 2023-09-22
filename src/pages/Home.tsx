@@ -1,36 +1,88 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMicrophone } from "@fortawesome/free-solid-svg-icons";
-import { faStop } from "@fortawesome/free-solid-svg-icons/faStop";
 import { faEllipsisVertical } from "@fortawesome/free-solid-svg-icons/faEllipsisVertical";
 import StopWatch from "../components/StopWatch";
 import TextContainer from "../components/TextContainer";
+import SpeechRecognition, {
+  useSpeechRecognition,
+} from "react-speech-recognition";
+
+import { faXmark } from "@fortawesome/free-solid-svg-icons/faXmark";
+import { faStop } from "@fortawesome/free-solid-svg-icons/faStop";
 
 const Home = () => {
   // state to store time
   const [time, setTime] = useState(0);
 
-  // state to check stopwatch running or not
-  const [isRunning, setIsRunning] = useState(false);
+  const {
+    isMicrophoneAvailable,
+    transcript,
+    resetTranscript,
+    listening,
+    browserSupportsSpeechRecognition,
+  } = useSpeechRecognition();
 
   useEffect(() => {
     let intervalId: number;
-    if (isRunning) {
+    if (listening) {
       // setting time from 0 to 1 every 10 milisecond using javascript setInterval method
       intervalId = setInterval(() => setTime(time + 1), 10);
     }
     return () => clearInterval(intervalId);
-  }, [isRunning, time]);
+  }, [listening, time]);
 
   // Method to start and stop timer
   const startAndPause = () => {
-    setIsRunning(!isRunning);
+    // TODO: check if the browser supports continous listening
+
+    if (!listening) {
+      SpeechRecognition.startListening({ continuous: true });
+      return;
+    }
+    SpeechRecognition.stopListening();
   };
 
   // Method to reset timer back to 0
   const reset = () => {
     setTime(0);
+    if (listening) {
+      SpeechRecognition.stopListening();
+    }
+    resetTranscript();
   };
+
+  if (!browserSupportsSpeechRecognition) {
+    return (
+      <div id="overlay" className="flex pt-14 justify-center">
+        <div id="overlay__content">
+          <p className="p-5">
+            Your Browser doesn't support speech recognition.
+          </p>
+          <button
+            className="self-start"
+            onClick={(e) => {
+              const button = e.currentTarget;
+              if (button.parentElement) {
+                button.parentElement.style.display = "none";
+              }
+            }}
+          >
+            <FontAwesomeIcon icon={faXmark} />
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isMicrophoneAvailable) {
+    return (
+      <>
+        <div> Microphone is not Available</div>
+      </>
+    );
+  }
+
   return (
     <>
       <div className="h-full">
@@ -42,7 +94,7 @@ const Home = () => {
               className="mx-2 mr-3"
               onClick={startAndPause}
             >
-              {isRunning ? (
+              {listening ? (
                 <FontAwesomeIcon
                   icon={faMicrophone}
                   size="2xl"
@@ -72,8 +124,8 @@ const Home = () => {
             </button>
           </div>
         </div>
-        {/* Text Area */}
-        <TextContainer />
+
+        <TextContainer transcript={transcript} />
       </div>
     </>
   );
