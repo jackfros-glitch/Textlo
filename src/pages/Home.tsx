@@ -10,10 +10,18 @@ import SpeechRecognition, {
 
 import { faXmark } from "@fortawesome/free-solid-svg-icons/faXmark";
 import { faStop } from "@fortawesome/free-solid-svg-icons/faStop";
+import ErrorHandler from "../components/ErrorHandler";
+
+interface ErrorInterface {
+  status: boolean;
+  message: string;
+}
 
 const Home = () => {
   // state to store time
+  const initialState = { status: false, message: "" };
   const [time, setTime] = useState(0);
+  const [error, setError] = useState<ErrorInterface>(initialState);
 
   const {
     isMicrophoneAvailable,
@@ -22,6 +30,10 @@ const Home = () => {
     listening,
     browserSupportsSpeechRecognition,
   } = useSpeechRecognition();
+
+  const checkMicrophonePermissions = async () => {
+    await navigator.mediaDevices.getUserMedia({ audio: true });
+  };
 
   useEffect(() => {
     let intervalId: number;
@@ -32,10 +44,13 @@ const Home = () => {
     return () => clearInterval(intervalId);
   }, [listening, time]);
 
+  useEffect(() => {
+    // Request access to the user's microphone
+    checkMicrophonePermissions();
+  }, []);
+
   // Method to start and stop timer
   const startAndPause = () => {
-    // TODO: check if the browser supports continous listening
-
     if (!listening) {
       SpeechRecognition.startListening({ continuous: true });
       return;
@@ -52,39 +67,32 @@ const Home = () => {
     resetTranscript();
   };
 
+  const cancel = () => {
+    setError({
+      status: false,
+      message: "",
+    });
+  };
+
   if (!browserSupportsSpeechRecognition) {
-    return (
-      <div id="overlay" className="flex pt-14 justify-center">
-        <div id="overlay__content">
-          <p className="p-5">
-            Your Browser doesn't support speech recognition.
-          </p>
-          <button
-            className="self-start"
-            onClick={(e) => {
-              const button = e.currentTarget;
-              if (button.parentElement) {
-                button.parentElement.style.display = "none";
-              }
-            }}
-          >
-            <FontAwesomeIcon icon={faXmark} />
-          </button>
-        </div>
-      </div>
-    );
+    let message = "Your Browser doesn't support speech recognition.";
+    setError({
+      status: true,
+      message,
+    });
   }
 
   if (!isMicrophoneAvailable) {
-    return (
-      <>
-        <div> Microphone is not Available</div>
-      </>
-    );
+    let message = "Microphone is not Available";
+    setError({
+      status: true,
+      message,
+    });
   }
 
   return (
     <>
+      <ErrorHandler error={error} cancel={cancel} />
       <div className="h-full">
         <div className="container">
           <StopWatch time={time} />
