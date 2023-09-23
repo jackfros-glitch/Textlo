@@ -35,6 +35,26 @@ const Home = () => {
     await navigator.mediaDevices.getUserMedia({ audio: true });
   };
 
+  const checkBrowserSupport = () => {
+    if (!browserSupportsSpeechRecognition) {
+      let message =
+        "Your Browser doesn't support speech recognition. Please Use Chrome Browser for better performance";
+      setError({
+        status: true,
+        message,
+      });
+    }
+  };
+
+  const checkMicrophoneAvailability = () => {
+    if (!isMicrophoneAvailable) {
+      let message = "Microphone is not Available";
+      setError({
+        status: true,
+        message,
+      });
+    }
+  };
   useEffect(() => {
     let intervalId: number;
     if (listening) {
@@ -47,6 +67,8 @@ const Home = () => {
   useEffect(() => {
     // Request access to the user's microphone
     checkMicrophonePermissions();
+    checkBrowserSupport();
+    checkMicrophoneAvailability();
   }, []);
 
   // Method to start and stop timer
@@ -73,22 +95,6 @@ const Home = () => {
       message: "",
     });
   };
-
-  if (!browserSupportsSpeechRecognition) {
-    let message = "Your Browser doesn't support speech recognition.";
-    setError({
-      status: true,
-      message,
-    });
-  }
-
-  if (!isMicrophoneAvailable) {
-    let message = "Microphone is not Available";
-    setError({
-      status: true,
-      message,
-    });
-  }
 
   return (
     <>
