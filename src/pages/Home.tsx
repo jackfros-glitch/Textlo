@@ -22,6 +22,8 @@ const Home = () => {
   const initialState = { status: false, message: "" };
   const [time, setTime] = useState(0);
   const [error, setError] = useState<ErrorInterface>(initialState);
+  const [showMenu, setShowMenu] = useState(false);
+  const [currentMode, setCurrentMode] = useState("");
 
   const {
     isMicrophoneAvailable,
@@ -95,7 +97,18 @@ const Home = () => {
       message: "",
     });
   };
+  const handleShowMenu = () => {
+    if (!showMenu) {
+      setShowMenu(true);
+      return;
+    }
+    setShowMenu(false);
+  };
 
+  const handleMode = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+    let mode = e.currentTarget.dataset.mode;
+    setCurrentMode(mode);
+  };
   return (
     <>
       <ErrorHandler error={error} cancel={cancel} />
@@ -130,12 +143,37 @@ const Home = () => {
             >
               <FontAwesomeIcon icon={faStop} style={{ color: "red" }} />
             </button>
-            <button className="mx-2">
-              <FontAwesomeIcon
-                icon={faEllipsisVertical}
-                style={{ color: "blue" }}
-              />
-            </button>
+            <div
+              className="wrapper relative border border-blue-200 rounded-sm"
+              onClick={handleShowMenu}
+            >
+              <button className="mx-2">
+                <FontAwesomeIcon
+                  icon={faEllipsisVertical}
+                  style={{ color: "blue" }}
+                />
+              </button>
+              {showMenu ? (
+                <div className="dropdown">
+                  <a
+                    className="item"
+                    onClick={(e) => handleMode(e)}
+                    data-mode={1}
+                  >
+                    Real Time
+                  </a>
+                  <a
+                    className="item"
+                    onClick={(e) => handleMode(e)}
+                    data-mode={2}
+                  >
+                    Record and Transcribe
+                  </a>
+                </div>
+              ) : (
+                ""
+              )}
+            </div>
           </div>
         </div>
 
