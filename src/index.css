@@ -38,9 +38,10 @@ body,
   .microphone-container {
   }
 }
-
+/* bg-transparent */
 .overlay {
-  @apply pt-14 justify-center bg-transparent fixed w-full h-full z-10;
+  @apply  items-center justify-center bg-zinc-300  fixed w-full h-full z-10;
+  background-color: rgba(0,0,0,0.5);
 }
 
 .overlay__content {
@@ -97,4 +98,20 @@ body,
 
 .active{
   background-color: #fff;
+}
+
+
+.loader {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 8px solid;
+  border-color: #e4e4ed;
+  border-right-color: #766df4;
+  animation: spin 1s infinite linear;
+}
+@keyframes spin {
+  to {
+    transform: rotate(1turn);
+  }
 }

@@ -24,7 +24,6 @@ export const fetchTranscript = async (audio: Blob) => {
   const transcriptId = response.data.id;
   const pollingEndpoint = `${baseUrl}/transcript/${transcriptId}`;
 
-  console.log("fetchTranscript called");
   while (true) {
     const pollingResponse = await axios.get(pollingEndpoint, {
       headers: headers,

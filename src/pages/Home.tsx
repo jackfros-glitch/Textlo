@@ -29,6 +29,7 @@ const Home = () => {
   const [audio, setAudio] = useState<Blob | null>(null);
   const [recording, setRecording] = useState(false);
   const [data, setData] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const {
     isMicrophoneAvailable,
@@ -87,7 +88,10 @@ const Home = () => {
     }
     if (currentMode === "2") {
       if (audio && audioChunks.length !== 0) {
-        fetchTranscript(audio).then((data) => setData(data));
+        fetchTranscript(audio).then((data) => {
+          setData(data);
+          setLoading(false);
+        });
       }
     }
 
@@ -157,6 +161,7 @@ const Home = () => {
       if (mediaRecorder.current) {
         mediaRecorder.current.stop();
         setRecording(false);
+        setLoading(true);
       }
       // TODO: SET THE DATA VARIABLE TO AN EMPTY STRING
       mediaRecorder.current = null;
@@ -203,6 +208,13 @@ const Home = () => {
   return (
     <>
       <ErrorHandler error={error} cancel={cancel} />
+      {loading ? (
+        <div className="overlay flex">
+          <div className="loader "></div>
+        </div>
+      ) : (
+        ""
+      )}
       <p className="text-center pb-0 m-0 pt-2">
         Mode : {currentMode === "1" ? "Real Time" : "Record and Transcribe"}
       </p>
