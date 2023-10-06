@@ -87,7 +87,6 @@ const Home = () => {
     }
     if (currentMode === "2") {
       if (audio && audioChunks.length !== 0) {
-        console.log("useEffect --- fetchCalled");
         fetchTranscript(audio).then((data) => setData(data));
       }
     }
@@ -116,11 +115,9 @@ const Home = () => {
         if (mediaRecorder.current.state === "paused") {
           mediaRecorder.current.resume();
           setRecording(true);
-          console.log(mediaRecorder.current.state);
         } else if (mediaRecorder.current.state == "recording") {
           mediaRecorder.current.pause();
           setRecording(false);
-          console.log(mediaRecorder.current.state);
         }
       } else {
         if (stream) {
@@ -131,9 +128,7 @@ const Home = () => {
           mediaRecorder.current.start();
           setRecording(true);
           let localAudioChunks: [] = [];
-          // TODO: SET THE AUDIOCHUNKS TO NULL
           setAudioChunks([]);
-          console.log("recorder started");
           mediaRecorder.current.ondataavailable = (event) => {
             if (typeof event.data === "undefined") return;
             if (event.data.size === 0) return;
@@ -162,7 +157,6 @@ const Home = () => {
       if (mediaRecorder.current) {
         mediaRecorder.current.stop();
         setRecording(false);
-        console.log("reset fetchCalled");
       }
       // TODO: SET THE DATA VARIABLE TO AN EMPTY STRING
       mediaRecorder.current = null;
