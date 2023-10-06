@@ -2,97 +2,99 @@
 @tailwind components;
 @tailwind utilities;
 
-
-*{
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
-*::after{
-    box-sizing: border-box;
+*::after {
+  box-sizing: border-box;
 }
-*::before{
-    box-sizing: border-box;
+*::before {
+  box-sizing: border-box;
 }
-body{
-    margin: 8px;
- 
+body {
+  margin: 8px;
 }
-body, #root{
-    height: 100vh;
+body,
+#root {
+  height: 100vh;
 }
-.microphone-container{
-    @apply  rounded-sm   h-14 flex  justify-end pr-8 items-center;
+.microphone-container {
+  @apply rounded-sm   h-14 flex  justify-end pr-8 items-center;
 }
-.stopwatch-container{
-    @apply justify-self-center;
+.stopwatch-container {
+  @apply justify-self-center;
 }
-.textarea-container{
-    max-width: 1024px;
+.textarea-container {
+  max-width: 1024px;
 }
-.container{
-    @apply grid grid-cols-2 w-[80%] max-w-[1024px] rounded border border-sky-500 m-auto mb-5 mt-5 items-center;
+.container {
+  @apply grid grid-cols-2 w-[80%] max-w-[1024px] rounded border border-sky-500 m-auto mb-5 mt-5 items-center;
 }
-@media screen and (max-width:390px) {
-    .stopwatch-container{
-        
-    }
-    .microphone-container{
-    }
-}
-
-
-#overlay {
-    @apply pt-14 justify-center bg-transparent fixed w-full h-full z-10;
+@media screen and (max-width: 390px) {
+  .stopwatch-container {
   }
-
-#overlay__content {
-    @apply w-80 h-40 p-5  border  rounded flex items-center justify-center bg-slate-50;
+  .microphone-container {
   }
+}
+
+.overlay {
+  @apply pt-14 justify-center bg-transparent fixed w-full h-full z-10;
+}
+
+.overlay__content {
+  @apply w-80 h-40 p-5  border  rounded flex items-center justify-center bg-slate-50;
+}
+
+/* playground css */
+
+.btn {
+  padding: 5px;
+  margin-left: 5px;
+}
+
+.dropdown::before {
+  position: absolute;
+  content: "";
+  border-width: 10px;
+  border-style: solid;
+  border-color: transparent rgba(0, 0, 0, 0) #d2e0fb rgba(0, 0, 0, 0);
+  top: -19px;
+  left: 47%;
+  margin-left: -5px;
+}
+
+.dropdown .item {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  border-radius: 5px;
+  text-align: center;
+}
+.dropdown .item:hover {
+  background-color: #fff;
+  cursor: pointer;
+}
+.dropdown {
+  /* visibility: hidden; */
+  position: absolute;
+  /* border: 1px solid skyblue; */
+  min-width: 150px;
+  padding: 5px;
+  margin-top: 15px;
+  border-radius: 5px;
+  left: -65px;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+  background-color: #d2e0fb;
+}
 
 
-  /* playground css */
-
-  .btn{
-    padding: 5px;
-    margin-left: 5px;
-  }
-
-  .dropdown::before {
-    position: absolute;
-    content: "";
-    border-width: 10px;
-    border-style: solid;
-    border-color: transparent rgba(0, 0, 0, 0) #d2e0fb rgba(0, 0, 0, 0);
-    top: -19px;
-    left: 47%;
-    margin-left: -5px;
-  }
-
-  .dropdown .item {
-    display: block;
-    color: inherit;
-    text-decoration: none;
-    padding-left: 10px;
-    padding-right: 10px;
-    padding-top: 3px;
-    padding-bottom: 3px;
-    border-radius: 5px;
-    text-align: center;
-  }
-  .dropdown .item:hover {
-    background-color: #fff;
-  }
-  .dropdown {
-    /* visibility: hidden; */
-    position: absolute;
-    /* border: 1px solid skyblue; */
-    min-width: 150px;
-    padding: 5px;
-    margin-top: 15px;
-    border-radius: 5px;
-    left: -65px;
-    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
-      rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
-    background-color: #d2e0fb;
-  }
+.active{
+  background-color: #fff;
+}

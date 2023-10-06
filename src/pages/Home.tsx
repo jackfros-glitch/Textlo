@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, MutableRefObject } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMicrophone } from "@fortawesome/free-solid-svg-icons";
 import { faEllipsisVertical } from "@fortawesome/free-solid-svg-icons/faEllipsisVertical";
@@ -7,10 +7,9 @@ import TextContainer from "../components/TextContainer";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
-
-import { faXmark } from "@fortawesome/free-solid-svg-icons/faXmark";
 import { faStop } from "@fortawesome/free-solid-svg-icons/faStop";
 import ErrorHandler from "../components/ErrorHandler";
+import { fetchTranscript } from "../utils";
 
 interface ErrorInterface {
   status: boolean;
@@ -23,7 +22,13 @@ const Home = () => {
   const [time, setTime] = useState(0);
   const [error, setError] = useState<ErrorInterface>(initialState);
   const [showMenu, setShowMenu] = useState(false);
-  const [currentMode, setCurrentMode] = useState("");
+  const [currentMode, setCurrentMode] = useState("1");
+  const [stream, setStream] = useState<MediaStream | null>(null);
+  const [audioChunks, setAudioChunks] = useState([]);
+  const mediaRecorder: MutableRefObject<MediaRecorder | null> = useRef(null);
+  const [audio, setAudio] = useState<Blob | null>(null);
+  const [recording, setRecording] = useState(false);
+  const [data, setData] = useState("");
 
   const {
     isMicrophoneAvailable,
@@ -34,7 +39,23 @@ const Home = () => {
   } = useSpeechRecognition();
 
   const checkMicrophonePermissions = async () => {
-    await navigator.mediaDevices.getUserMedia({ audio: true });
+    if ("MediaRecorder" in window) {
+      try {
+        return await navigator.mediaDevices.getUserMedia({
+          audio: true,
+        });
+      } catch (err: any) {
+        let message = err.message;
+        setError({ status: true, message });
+      }
+    } else {
+      let message =
+        "The MediaRecorder API is not supported in your browser, Please try Using Chrome.";
+      setError({
+        status: true,
+        message,
+      });
+    }
   };
 
   const checkBrowserSupport = () => {
@@ -57,38 +78,96 @@ const Home = () => {
       });
     }
   };
+
   useEffect(() => {
     let intervalId: number;
-    if (listening) {
+    if (listening || recording) {
       // setting time from 0 to 1 every 10 milisecond using javascript setInterval method
       intervalId = setInterval(() => setTime(time + 1), 10);
     }
+    if (currentMode === "2") {
+      if (audio && audioChunks.length !== 0) {
+        console.log("useEffect --- fetchCalled");
+        fetchTranscript(audio).then((data) => setData(data));
+      }
+    }
+
     return () => clearInterval(intervalId);
-  }, [listening, time]);
+  }, [listening, time, recording, audio]);
 
   useEffect(() => {
     // Request access to the user's microphone
-    checkMicrophonePermissions();
+    checkMicrophonePermissions().then((stream) => setStream(stream));
     checkBrowserSupport();
     checkMicrophoneAvailability();
   }, []);
 
-  // Method to start and stop timer
-  const startAndPause = () => {
-    if (!listening) {
-      SpeechRecognition.startListening({ continuous: true });
+  // Method to start and pause the recorder
+  const startAndPause = async () => {
+    if (currentMode == "1") {
+      if (!listening) {
+        SpeechRecognition.startListening({ continuous: true });
+        return;
+      }
+      SpeechRecognition.stopListening();
       return;
+    } else {
+      if (mediaRecorder.current) {
+        if (mediaRecorder.current.state === "paused") {
+          mediaRecorder.current.resume();
+          setRecording(true);
+          console.log(mediaRecorder.current.state);
+        } else if (mediaRecorder.current.state == "recording") {
+          mediaRecorder.current.pause();
+          setRecording(false);
+          console.log(mediaRecorder.current.state);
+        }
+      } else {
+        if (stream) {
+          const media = new MediaRecorder(stream);
+          //set the MediaRecorder instance to the mediaRecorder ref
+          mediaRecorder.current = media;
+          //invokes the start method to start the recording process
+          mediaRecorder.current.start();
+          setRecording(true);
+          let localAudioChunks: [] = [];
+          // TODO: SET THE AUDIOCHUNKS TO NULL
+          setAudioChunks([]);
+          console.log("recorder started");
+          mediaRecorder.current.ondataavailable = (event) => {
+            if (typeof event.data === "undefined") return;
+            if (event.data.size === 0) return;
+            localAudioChunks.push(event.data);
+            const audioBlob = new Blob(localAudioChunks, {
+              type: "audio/webm",
+            });
+            //creates a playable URL from the blob file.
+            const audioUrl = URL.createObjectURL(audioBlob);
+            setAudio(audioBlob);
+            setAudioChunks([...localAudioChunks]);
+          };
+        }
+      }
     }
-    SpeechRecognition.stopListening();
   };
 
-  // Method to reset timer back to 0
   const reset = () => {
-    setTime(0);
-    if (listening) {
-      SpeechRecognition.stopListening();
+    if (currentMode == "1") {
+      setTime(0);
+      if (listening) {
+        SpeechRecognition.stopListening();
+      }
+      resetTranscript();
+    } else {
+      if (mediaRecorder.current) {
+        mediaRecorder.current.stop();
+        setRecording(false);
+        console.log("reset fetchCalled");
+      }
+      // TODO: SET THE DATA VARIABLE TO AN EMPTY STRING
+      mediaRecorder.current = null;
+      setTime(0);
     }
-    resetTranscript();
   };
 
   const cancel = () => {
@@ -107,21 +186,43 @@ const Home = () => {
 
   const handleMode = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     let mode = e.currentTarget.dataset.mode;
+    if (listening) {
+      SpeechRecognition.stopListening();
+    }
+    if (recording) {
+      if (mediaRecorder.current) {
+        mediaRecorder.current.stop();
+        mediaRecorder.current = null;
+      }
+      setRecording(false);
+    }
+    resetTranscript();
+    setData("");
+    setTime(0);
     setCurrentMode(mode);
   };
+
+  const handleOnChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setData(e.currentTarget.value);
+  };
+
   return (
     <>
       <ErrorHandler error={error} cancel={cancel} />
+      <p className="text-center pb-0 m-0 pt-2">
+        Mode : {currentMode === "1" ? "Real Time" : "Record and Transcribe"}
+      </p>
       <div className="h-full">
         <div className="container">
           <StopWatch time={time} />
+
           <div className="microphone-container">
             <button
               id="startPauseButton"
               className="mx-2 mr-3"
               onClick={startAndPause}
             >
-              {listening ? (
+              {listening || recording === true ? (
                 <FontAwesomeIcon
                   icon={faMicrophone}
                   size="2xl"
@@ -156,14 +257,14 @@ const Home = () => {
               {showMenu ? (
                 <div className="dropdown">
                   <a
-                    className="item"
+                    className={"item"}
                     onClick={(e) => handleMode(e)}
                     data-mode={1}
                   >
                     Real Time
                   </a>
                   <a
-                    className="item"
+                    className={"item "}
                     onClick={(e) => handleMode(e)}
                     data-mode={2}
                   >
@@ -177,7 +278,14 @@ const Home = () => {
           </div>
         </div>
 
-        <TextContainer transcript={transcript} />
+        {data && currentMode === "2" ? (
+          <TextContainer
+            transcript={data}
+            onChange={(e) => handleOnChange(e)}
+          />
+        ) : (
+          <TextContainer transcript={transcript} />
+        )}
       </div>
     </>
   );

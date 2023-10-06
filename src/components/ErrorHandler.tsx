@@ -8,10 +8,10 @@ interface Props {
 }
 const ErrorHandler = ({ error, cancel }: Props) => {
   return (
-    <div id="overlay" className={`${error.status ? "flex" : "hidden"} `}>
-      <div id="overlay__content">
-        <p className="p-5">{error.message}</p>
-        <button className="self-start" onClick={cancel}>
+    <div className={`${error.status ? "flex" : "hidden"} overlay`}>
+      <div className="overlay__content">
+        <p className="p-5 ml-5 w-5/6 text-center">{error.message}</p>
+        <button className="self-start ml-auto" onClick={cancel}>
           <FontAwesomeIcon icon={faXmark} />
         </button>
       </div>
