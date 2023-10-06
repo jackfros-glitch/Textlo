@@ -89,10 +89,17 @@ const Home = () => {
     }
     if (currentMode === "2") {
       if (audio && audioChunks.length !== 0) {
-        fetchTranscript(audio).then((data) => {
-          setData(data);
-          setLoading(false);
-        });
+        fetchTranscript(audio).then(
+          (data) => {
+            setData(data);
+            setLoading(false);
+          },
+          (err) => {
+            let message = err.message;
+            setError({ status: true, message });
+            setLoading(false);
+          }
+        );
       }
     }
 
@@ -162,7 +169,6 @@ const Home = () => {
       if (mediaRecorder.current) {
         mediaRecorder.current.stop();
         setRecording(false);
-        setLoading(true);
       }
       // TODO: SET THE DATA VARIABLE TO AN EMPTY STRING
       mediaRecorder.current = null;
@@ -209,7 +215,7 @@ const Home = () => {
   return (
     <>
       <ErrorHandler error={error} cancel={cancel} />
-      {loading ? (
+      {loading && error.status === false ? (
         <div className="overlay flex">
           <div className="loader "></div>
         </div>
