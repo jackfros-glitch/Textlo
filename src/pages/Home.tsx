@@ -20,17 +20,17 @@ interface ErrorInterface {
 const Home = () => {
   // state to store time
   const initialState = { status: false, message: "" };
-  const [time, setTime] = useState(0);
+  const [time, setTime] = useState<number>(0);
   const [error, setError] = useState<ErrorInterface>(initialState);
-  const [showMenu, setShowMenu] = useState(false);
-  const [currentMode, setCurrentMode] = useState("1");
-  const [stream, setStream] = useState<MediaStream | null>(null);
-  const [audioChunks, setAudioChunks] = useState([]);
+  const [showMenu, setShowMenu] = useState<boolean>(false);
+  const [currentMode, setCurrentMode] = useState<string | undefined>("1");
+  const [stream, setStream] = useState<MediaStream | undefined>(undefined);
+  const [audioChunks, setAudioChunks] = useState<Blob[]>([]);
   const mediaRecorder: MutableRefObject<MediaRecorder | null> = useRef(null);
   const [audio, setAudio] = useState<Blob | null>(null);
-  const [recording, setRecording] = useState(false);
-  const [data, setData] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [recording, setRecording] = useState<boolean>(false);
+  const [data, setData] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
 
   const {
     isMicrophoneAvailable,
@@ -82,7 +82,7 @@ const Home = () => {
   };
 
   useEffect(() => {
-    let intervalId: number;
+    let intervalId: undefined | ReturnType<typeof setTimeout>;
     if (listening || recording) {
       // setting time from 0 to 1 every 10 milisecond using javascript setInterval method
       intervalId = setInterval(() => setTime(time + 1), 10);
@@ -132,7 +132,7 @@ const Home = () => {
           //invokes the start method to start the recording process
           mediaRecorder.current.start();
           setRecording(true);
-          let localAudioChunks: [] = [];
+          let localAudioChunks: Blob[] = [];
           setAudioChunks([]);
           mediaRecorder.current.ondataavailable = (event) => {
             if (typeof event.data === "undefined") return;
@@ -185,7 +185,7 @@ const Home = () => {
   };
 
   const handleMode = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-    let mode = e.currentTarget.dataset.mode;
+    let mode: string | undefined = e.currentTarget.dataset.mode;
     if (listening) {
       SpeechRecognition.stopListening();
     }
