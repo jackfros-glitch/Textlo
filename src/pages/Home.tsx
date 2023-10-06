@@ -10,6 +10,7 @@ import SpeechRecognition, {
 import { faStop } from "@fortawesome/free-solid-svg-icons/faStop";
 import ErrorHandler from "../components/ErrorHandler";
 import { fetchTranscript } from "../utils";
+import Footer from "../components/Footer";
 
 interface ErrorInterface {
   status: boolean;
@@ -293,6 +294,7 @@ const Home = () => {
           <TextContainer transcript={transcript} />
         )}
       </div>
+      <Footer />
     </>
   );
 };

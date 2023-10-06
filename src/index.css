@@ -115,3 +115,12 @@ body,
     transform: rotate(1turn);
   }
 }
+
+.footer{
+ text-align: center;
+ padding: 5px;
+ padding-bottom: 10px;
+}
+.footer p{
+  cursor: pointer;
+}
