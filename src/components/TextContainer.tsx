@@ -10,7 +10,7 @@ const TextContainer = ({ transcript, onChange }: Props) => {
     <>
       <div className="h-[80%] border border-sky-500 w-[80%] m-auto mb-10 rounded overflow-hidden textarea-container">
         <textarea
-          className="h-full w-full resize-none outline-none p-2 text-current"
+          className="h-full w-full resize-none outline-none p-2 text-current "
           value={transcript}
           onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
             onChange?.(e)
