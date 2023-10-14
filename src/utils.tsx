@@ -1,6 +1,4 @@
 import axios from "axios";
-import fs from "fs-extra";
-import React from "react";
 
 export const fetchTranscript = async (audio: Blob) => {
   const baseUrl = "https://api.assemblyai.com/v2";
