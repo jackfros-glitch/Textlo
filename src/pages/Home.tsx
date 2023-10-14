@@ -11,10 +11,18 @@ import { faStop } from "@fortawesome/free-solid-svg-icons/faStop";
 import ErrorHandler from "../components/ErrorHandler";
 import { fetchTranscript } from "../utils";
 import Footer from "../components/Footer";
+import Joyride from "react-joyride";
 
 interface ErrorInterface {
   status: boolean;
   message: string;
+}
+
+interface StepsInterface {
+  target: string;
+  title: string;
+  content: string;
+  disableBeacon?: Boolean;
 }
 
 const Home = () => {
@@ -31,6 +39,8 @@ const Home = () => {
   const [recording, setRecording] = useState<boolean>(false);
   const [data, setData] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+
+  const [steps, setSteps] = useState<StepsInterface[]>([]);
 
   const {
     isMicrophoneAvailable,
@@ -111,6 +121,35 @@ const Home = () => {
     checkMicrophonePermissions().then((stream) => setStream(stream));
     checkBrowserSupport();
     checkMicrophoneAvailability();
+    const tourStatus = window.localStorage.getItem("tourStatus");
+    if (tourStatus === "false" || tourStatus === null) {
+      setSteps([
+        {
+          target: ".mode",
+          title: "Mode",
+          content: "Your current mode will appear here",
+          disableBeacon: true,
+        },
+        {
+          target: ".startButton",
+          title: "Start and Pause button",
+          content: "Click this button to start or pause your recording",
+        },
+        {
+          target: ".stopButton",
+          title: "StopButton",
+          content: "Click this button to end recording",
+        },
+        {
+          target: ".optionsButton",
+          title: "Options Button",
+          content: "Click this button to choose your preferred mode.",
+        },
+      ]);
+      window.localStorage.setItem("tourStatus", "true");
+    } else {
+      setSteps(() => []);
+    }
   }, []);
 
   // Method to start and pause the recorder
@@ -222,7 +261,13 @@ const Home = () => {
       ) : (
         ""
       )}
-      <p className="text-center pb-0 m-0 pt-2">
+      <Joyride
+        steps={steps}
+        continuous={true}
+        showProgress={true}
+        showSkipButton={true}
+      />
+      <p className="mode text-center pb-0 m-0 pt-2">
         Mode : {currentMode === "1" ? "Real Time" : "Record and Transcribe"}
       </p>
       <div className="h-full">
@@ -232,7 +277,7 @@ const Home = () => {
           <div className="microphone-container">
             <button
               id="startPauseButton"
-              className="mx-2 mr-3"
+              className="startButton mx-2 mr-3"
               onClick={startAndPause}
             >
               {listening || recording === true ? (
@@ -252,7 +297,7 @@ const Home = () => {
             </button>
             <button
               id="stopButton"
-              className="mx-2 border border-blue-200 p-2 py-0 flex h-8 mr-3 items-center rounded-sm"
+              className="stopButton mx-2 border border-blue-200 p-2 py-0 flex h-8 mr-3 items-center rounded-sm"
               onClick={reset}
             >
               <FontAwesomeIcon icon={faStop} style={{ color: "red" }} />
@@ -261,7 +306,7 @@ const Home = () => {
               className="wrapper relative border border-blue-200 rounded-sm"
               onClick={handleShowMenu}
             >
-              <button className="mx-2">
+              <button className="optionsButton mx-2">
                 <FontAwesomeIcon
                   icon={faEllipsisVertical}
                   style={{ color: "blue" }}
