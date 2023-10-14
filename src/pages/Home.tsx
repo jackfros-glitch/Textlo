@@ -188,7 +188,6 @@ const Home = () => {
               type: "audio/webm",
             });
             //creates a playable URL from the blob file.
-            const audioUrl = URL.createObjectURL(audioBlob);
             setAudio(audioBlob);
             setAudioChunks([...localAudioChunks]);
           };
