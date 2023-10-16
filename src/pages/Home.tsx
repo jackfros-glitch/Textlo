@@ -38,7 +38,7 @@ const Home = () => {
   const [audio, setAudio] = useState<Blob | null>(null);
   const [recording, setRecording] = useState<boolean>(false);
   const [data, setData] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [steps, setSteps] = useState<StepsInterface[]>([]);
 
@@ -102,12 +102,12 @@ const Home = () => {
         fetchTranscript(audio).then(
           (data) => {
             setData(data);
-            setLoading(false);
+            setIsLoading(false);
           },
           (err) => {
             let message = err.message;
             setError({ status: true, message });
-            setLoading(false);
+            setIsLoading(false);
           }
         );
       }
@@ -207,6 +207,7 @@ const Home = () => {
       if (mediaRecorder.current) {
         mediaRecorder.current.stop();
         setRecording(false);
+        setIsLoading(true);
       }
       // TODO: SET THE DATA VARIABLE TO AN EMPTY STRING
       mediaRecorder.current = null;
@@ -253,7 +254,7 @@ const Home = () => {
   return (
     <>
       <ErrorHandler error={error} cancel={cancel} />
-      {loading && error.status === false ? (
+      {isLoading && error.status === false ? (
         <div className="overlay flex">
           <div className="loader "></div>
         </div>
