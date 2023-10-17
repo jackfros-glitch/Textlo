@@ -14,9 +14,12 @@ Textlo is a web application that enables users to transcribe spoken language in 
 
 ## Table of Content
 
-- [Getting Started](#Getting-Started)
-- [Technologies](#Technologies)
-- [Features](#Features)
+- [Getting Started](#getting-started)
+- [Technologies](#technologies)
+- [Features](#features)
+- [Future](#future)
+- [Resources](#resources)
+- [Authors](#authors)
 
 ## Getting Started
 
@@ -49,6 +52,7 @@ npm run dev
 - [React.ts](https://react.dev/) - Javascript frontend library
 - [TailwindCss](https://tailwindcss.com/) - Css framework
 - [axios](https://axios-http.com/docs/intro) - Promise based HTTP Client for the Browser
+- [ReactJoyRide](https://docs.react-joyride.com/) - React library for creating product Tours
 
 ## Features
 
@@ -70,9 +74,9 @@ The web app currently transcribes speech audio in real-time and allows audio rec
 
 ## Resources
 
-- [webSpeechAPI]()
-- [speechRecognitionHook]()
-- [AssemblyAI]()
+- [webSpeechAPI](https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API)
+- [react-speech-recognition](https://www.npmjs.com/package/react-speech-recognition)
+- [AssemblyAI](https://www.assemblyai.com/)
 
 ## Authors
 
@@ -81,4 +85,4 @@ The web app currently transcribes speech audio in real-time and allows audio rec
 [Jackfros-glitch](https://github.com/jackfros-glitch)
 Manasseh is a full stack software engineer who enjoys both backend work and frontend work.
 
-If you would like to contact [Manasseh](<mailto:hirekaanm3(at)gmail(dot)com>) about any opportunities, feel free to reach out!
+If you would like to contact [Manasseh](mailto:hirekaanm3@gmail.com) about any opportunities, feel free to reach out!
