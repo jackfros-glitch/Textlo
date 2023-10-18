@@ -15,13 +15,19 @@ Textlo is a web application that enables users to transcribe spoken language in 
 ## Table of Content
 
 - [Getting Started](#getting-started)
+  - [Local Setup](#local-setup)
 - [Technologies](#technologies)
 - [Features](#features)
+  - [Realtime Transcription](#realtime-transription)
+  - [Record and Transcribe](#record-and-transcribe)
 - [Future](#future)
 - [Resources](#resources)
 - [Authors](#authors)
+  - [Manasseh Hirekaan](#manasseh-hirekaan)
 
 ## Getting Started
+
+Currently the web app is hosted live on : https://textlo.netlify.app/
 
 ### Local Setup
 
