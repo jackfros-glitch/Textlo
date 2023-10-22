@@ -31,7 +31,7 @@ const Home = () => {
   const [time, setTime] = useState<number>(0);
   const [error, setError] = useState<ErrorInterface>(initialState);
   const [showMenu, setShowMenu] = useState<boolean>(false);
-  const [currentMode, setCurrentMode] = useState<string | undefined>("1");
+  const [currentMode, setCurrentMode] = useState<string | undefined>("2");
   const [stream, setStream] = useState<MediaStream | undefined>(undefined);
   const [audioChunks, setAudioChunks] = useState<Blob[]>([]);
   const mediaRecorder: MutableRefObject<MediaRecorder | null> = useRef(null);
