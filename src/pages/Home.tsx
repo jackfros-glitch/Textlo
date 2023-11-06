@@ -129,6 +129,12 @@ const Home = () => {
     } else {
       setSteps(() => []);
     }
+    return () => {
+      window.removeEventListener("online", () => console.log("you are online"));
+      window.removeEventListener("offline", () =>
+        console.log("You are offline")
+      );
+    };
   }, []);
 
   // Method to start and pause the recorder
@@ -295,7 +301,13 @@ const Home = () => {
                 <div className="dropdown">
                   <a
                     className={"item"}
-                    onClick={(e) => handleMode(e)}
+                    onClick={() =>
+                      setError(() => ({
+                        status: true,
+                        message:
+                          "Sorry please Our team are still working on this feature and once it is done we will definately make it availbale.",
+                      }))
+                    }
                     data-mode={1}
                   >
                     Real Time
