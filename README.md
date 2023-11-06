@@ -64,6 +64,8 @@ npm run dev
 
 ### Realtime Transription
 
+> Note : This feature has been disabled and and is currently going through some improvements.
+
 - The real-time transcription feature of the web app is powered by [React's speechRecognition hook](https://www.npmjs.com/package/react-speech-recognition) which under the hood uses [webSpeechApi](https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition) to convert speech audio into text.
 
 <img src="./src/assets/images/Realtime_mode.png">
