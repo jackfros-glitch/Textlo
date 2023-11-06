@@ -12,6 +12,7 @@ import ErrorHandler from "../components/ErrorHandler";
 import { fetchTranscript } from "../utils";
 import Footer from "../components/Footer";
 import Joyride from "react-joyride";
+import tourSteps from "../assets/data/tourSteps";
 
 interface ErrorInterface {
   status: boolean;
@@ -123,33 +124,17 @@ const Home = () => {
     checkMicrophoneAvailability();
     const tourStatus = window.localStorage.getItem("tourStatus");
     if (tourStatus === "false" || tourStatus === null) {
-      setSteps([
-        {
-          target: ".mode",
-          title: "Mode",
-          content: "Your current mode will appear here",
-          disableBeacon: true,
-        },
-        {
-          target: ".startButton",
-          title: "Start and Pause button",
-          content: "Click this button to start or pause your recording",
-        },
-        {
-          target: ".stopButton",
-          title: "StopButton",
-          content: "Click this button to end recording",
-        },
-        {
-          target: ".optionsButton",
-          title: "Options Button",
-          content: "Click this button to choose your preferred mode.",
-        },
-      ]);
+      setSteps(tourSteps);
       window.localStorage.setItem("tourStatus", "true");
     } else {
       setSteps(() => []);
     }
+    return () => {
+      window.removeEventListener("online", () => console.log("you are online"));
+      window.removeEventListener("offline", () =>
+        console.log("You are offline")
+      );
+    };
   }, []);
 
   // Method to start and pause the recorder
@@ -316,7 +301,13 @@ const Home = () => {
                 <div className="dropdown">
                   <a
                     className={"item"}
-                    onClick={(e) => handleMode(e)}
+                    onClick={() =>
+                      setError(() => ({
+                        status: true,
+                        message:
+                          "Sorry please Our team are still working on this feature and once it is done we will definately make it availbale.",
+                      }))
+                    }
                     data-mode={1}
                   >
                     Real Time
