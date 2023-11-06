@@ -295,7 +295,13 @@ const Home = () => {
                 <div className="dropdown">
                   <a
                     className={"item"}
-                    onClick={(e) => handleMode(e)}
+                    onClick={() =>
+                      setError(() => ({
+                        status: true,
+                        message:
+                          "Sorry please Our team are still working on this feature and once it is done we will definately make it availbale.",
+                      }))
+                    }
                     data-mode={1}
                   >
                     Real Time
